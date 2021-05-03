@@ -2,7 +2,7 @@
 <!DOCTYPE version SYSTEM "../../../lib/pkp/dtd/pluginVersion.dtd">
 
 <!--
-  * plugins/generic/finto/version.xml
+  * plugins/generic/idkbse/version.xml
   *
   * Copyright (c) 2013-2019 Simon Fraser University Library
   * Copyright (c) 2003-2019 John Willinsky
@@ -11,10 +11,10 @@
   * Plugin version information.
   -->
 <version>
-	<application>finto</application>
+	<application>idkbse</application>
 	<type>plugins.generic</type>
-	<release>1.0.0.2</release>
-	<date>2019-11-06</date>
+	<release>1.0.0</release>
+	<date>2021-05-03</date>
 	<lazy-load>1</lazy-load>
-	<class>FintoPlugin</class>
+	<class>IdkbsePlugin</class>
 </version>

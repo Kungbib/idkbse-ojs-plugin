@@ -1,33 +1,33 @@
 <?php
 
 /**
- * @file fintoPlugin.inc.php
+ * @file IdkbsePlugin.inc.php
  *
  * Copyright (c) 2013-2019 Simon Fraser University Library
  * Copyright (c) 2003-2019 John Willinsky
  * Distributed under the GNU GPL v2. For full terms see the file docs/COPYING.
  *
- * @class fintoPlugin
- * @ingroup plugins_generic_finto
- * @brief finto plugin class
+ * @class idkbsePlugin
+ * @ingroup plugins_generic_idkbse
+ * @brief Id.kb.se plugin class
  *
  *
  */
 
 import('lib.pkp.classes.plugins.GenericPlugin');
 
-class FintoPlugin extends GenericPlugin {
+class IdkbsePlugin extends GenericPlugin {
 
    function getName() {
-        return 'fintoPlugin';
+        return 'idkbsePlugin';
     }
 
     function getDisplayName() {
-        return "Finto/YSO";
+        return "Id.kb.se keywords";
     }
 
     function getDescription() {
-        return "Integrates YSO ontology from the Finnish Finto service to the keyword field in OJS3. Supports Finnish, English and Swedish.";
+        return "Integrates swedish subject headings from id.kb.se with the keyword field.";
     }
 
     function register($category, $path, $mainContextId = NULL) {
@@ -51,7 +51,7 @@ class FintoPlugin extends GenericPlugin {
 	}
 
 	/**
-	 * Output filter adds Finto to keyword fields by overriding the existing controlled vocabulary settings
+	 * Output filter adds id.kb.se terms to the keyword field by overriding the existing controlled vocabulary settings
 	 * @param $output string
 	 * @param $templateMgr TemplateManager
 	 * @return $string
@@ -60,19 +60,8 @@ class FintoPlugin extends GenericPlugin {
 
 		$endPoint = '</script>';
 
-		// en_US
-		$startPoint = 'en_US-keywords\]\[\]",';
-		$newscript = $this->ysoTagit('en');
-		$output = preg_replace('#('.$startPoint.')(.*?)('.$endPoint.')#si', '$1'.$newscript.'$3', $output, 1);
-
-		// fi_FI
-		$startPoint = 'fi_FI-keywords\]\[\]",';
-		$newscript = $this->ysoTagit('fi');
-		$output = preg_replace('#('.$startPoint.')(.*?)('.$endPoint.')#si', '$1'.$newscript.'$3', $output, 1);
-
-		// sv_SE
 		$startPoint = 'sv_SE-keywords\]\[\]",';
-		$newscript = $this->ysoTagit('sv');
+		$newscript = $this->idkbseTagit();
 		$output = preg_replace('#('.$startPoint.')(.*?)('.$endPoint.')#si', '$1'.$newscript.'$3', $output, 1);		
 
 		if (stristr($output, '-keywords][]')){
@@ -81,28 +70,29 @@ class FintoPlugin extends GenericPlugin {
 
 		return $output;
 	}
-	
+
 	/**
-	 * Get YSO tagit settings for selected locale
-	 * @param $locale string
+	 * Get tagit settings
 	 * @return $string
 	 */
-	function ysoTagit($locale){
+	function idkbseTagit(){
 		return "allowSpaces: true,
+				placeholderText: 'Lägg till svenska termer',
 				tagSource: function(request, response){
 						$.ajax({
-							url: 'https://api.finto.fi/rest/v1/search?vocab=yso&lang=" . $locale . "',
+							url: 'https://id.kb.se/find?&inScheme.@id=https://id.kb.se/term/sao&_limit=20',
 							dataType: 'json',
+							cache: 'true',
 							data: {
-								query: request.term + '*'
+								q: request.term + '*'
 							},
 							success: 
 										function( data ) {
-										var output = data.results;
-										response($.map(data.results, function(item) {
+										var output = data.items;
+										response($.map(data.items, function(item) {
 											return {
-												label: item.prefLabel + ' [' + item.uri + ']',
-												value: item.prefLabel + ' [' + item.uri + ']'
+												label: item.prefLabel + ' [' + item['@id'] + ']',
+												value: item.prefLabel + ' [' + item['@id'] + ']'
 											}
 										}));
 							}	
