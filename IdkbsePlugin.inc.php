@@ -78,9 +78,9 @@ class IdkbsePlugin extends GenericPlugin {
 	function idkbseTagit(){
 		return "allowSpaces: true,
 				placeholderText: 'Lägg till svenska termer',
-				tagSource: function(request, response){
+				tagSource: function(request, response) {
 						$.ajax({
-							url: 'https://id.kb.se/find?&inScheme.@id=https://id.kb.se/term/sao&_limit=20',
+							url: 'https://id.kb.se/find?&inScheme.@id=https://id.kb.se/term/sao&_limit=15',
 							dataType: 'json',
 							cache: 'true',
 							data: {
@@ -92,13 +92,28 @@ class IdkbsePlugin extends GenericPlugin {
 										response($.map(data.items, function(item) {
 											return {
 												label: item.prefLabel + ' [' + item['@id'] + ']',
-												value: item.prefLabel + ' [' + item['@id'] + ']'
+												value: item['@id']
 											}
 										}));
 							}	
 							
 						});
+				},
+	
+				beforeTagAdded: function(event, ui) {
+				var labelSpan = ui.tag[0].childNodes[0];
+				var id = ui.tagLabel;
+				var prefLabel = decodeURIComponent(ui.tagLabel.split(\"/\").pop());
+				
+				if (id.includes('id.kb.se/term')) {
+					labelSpan.textContent = '';
+					var link = document.createElement(\"a\");
+					link.setAttribute(\"href\", id);
+					link.setAttribute('target', \"_blank\")
+					link.innerHTML = prefLabel;
+					labelSpan.appendChild(link);
 				}
+				},
 			});
 
 		});";
