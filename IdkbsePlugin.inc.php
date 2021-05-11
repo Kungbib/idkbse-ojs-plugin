@@ -92,7 +92,7 @@ class IdkbsePlugin extends GenericPlugin {
 										response($.map(data.items, function(item) {
 											return {
 												label: item.prefLabel + ' [' + item['@id'] + ']',
-												value: item['@id']
+												value: item.prefLabel+'|'+item['@id']
 											}
 										}));
 							}	
@@ -101,11 +101,12 @@ class IdkbsePlugin extends GenericPlugin {
 				},
 	
 				beforeTagAdded: function(event, ui) {
-				var labelSpan = ui.tag[0].childNodes[0];
-				var id = ui.tagLabel;
-				var prefLabel = decodeURIComponent(ui.tagLabel.split(\"/\").pop());
-				
-				if (id.includes('id.kb.se/term')) {
+				if (ui.tagLabel.includes('id.kb.se/term')) {
+					var splitValue = ui.tagLabel.split(\"|\")
+					var prefLabel = splitValue.shift();
+					var id = splitValue.pop();
+					
+					var labelSpan = ui.tag[0].childNodes[0];
 					labelSpan.textContent = '';
 					var link = document.createElement(\"a\");
 					link.setAttribute(\"href\", id);
