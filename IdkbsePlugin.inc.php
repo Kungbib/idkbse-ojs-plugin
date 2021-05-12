@@ -101,19 +101,19 @@ class IdkbsePlugin extends GenericPlugin {
 				},
 	
 				beforeTagAdded: function(event, ui) {
-				if (ui.tagLabel.includes('id.kb.se/term')) {
-					var splitValue = ui.tagLabel.split(\"|\")
-					var prefLabel = splitValue.shift();
-					var id = splitValue.pop();
-					
-					var labelSpan = ui.tag[0].childNodes[0];
-					labelSpan.textContent = '';
-					var link = document.createElement(\"a\");
-					link.setAttribute(\"href\", id);
-					link.setAttribute('target', \"_blank\")
-					link.innerHTML = prefLabel;
-					labelSpan.appendChild(link);
-				}
+					if (ui.tagLabel.includes('id.kb.se/term')) {
+						var splitValue = ui.tagLabel.split(\"|\")
+						var prefLabel = splitValue.shift();
+						var id = splitValue.pop();
+						
+						var labelSpan = ui.tag[0].childNodes[0];
+						labelSpan.textContent = '';
+						var link = document.createElement(\"a\");
+						link.setAttribute(\"href\", id);
+						link.setAttribute('target', \"_blank\")
+						link.innerHTML = prefLabel;
+						labelSpan.appendChild(link);
+					}
 				},
 			});
 
