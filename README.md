@@ -1,4 +1,4 @@
-# Id.kb.se keywords
+# id.kb.se keywords
 Integrates controlled vocabularies from [id.kb.se](id.kb.se) with the keyword field in OJS3.
 
 Currently, keywords from the subject scheme SAO (Svenska ämnesord, https://id.kb.se/term/sao) can be linked for new OJS articles.
