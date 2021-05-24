@@ -53,7 +53,7 @@ class IdkbsePlugin extends GenericPlugin {
 	}
 
 	function handleFormDisplay($hookName, $args) {
-		$request = PKPApplication::getRequest();
+		$request = Application::get()->getRequest();
 		$templateMgr = TemplateManager::getManager($request);
 		$template =& $args[1];
 		switch ($template) {
